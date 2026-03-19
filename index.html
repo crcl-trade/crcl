@@ -340,7 +340,7 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; text-align: ce
 <section class="wrap hero">
   <div class="hero-free-badge">
     <div class="free-dot"></div>
-    완전 무료 · 베타 참여자 모집 중
+    완전 무료 · 커뮤니티 멤버 모집 중
   </div>
   <h1 class="hero-title">
     시계는 돌아야 <span class="blue">제맛</span><br>
@@ -467,8 +467,15 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; text-align: ce
         <input class="form-input" id="f-name" type="text" placeholder="예: 김시계"/>
       </div>
       <div class="form-group">
-        <label class="form-label">연락처 — 카카오 ID 또는 인스타 ID</label>
-        <input class="form-input" id="f-contact" type="text" placeholder="예: @watchlover_kim"/>
+        <label class="form-label">연락 수단</label>
+        <select class="form-select" id="f-contact-type" onchange="updateContactInput(this.value)" style="margin-bottom:8px;">
+          <option value="">선택해주세요</option>
+          <option value="email">이메일</option>
+          <option value="kakao">카카오톡 ID</option>
+          <option value="insta">인스타그램 ID</option>
+          <option value="phone">휴대폰 번호</option>
+        </select>
+        <input class="form-input" id="f-contact" type="text" placeholder="선택 후 입력해주세요" style="display:none;"/>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -516,6 +523,22 @@ footer { border-top: 1px solid var(--border); padding: 28px 24px; text-align: ce
 </footer>
 
 <script>
+const placeholders = {
+  email: '예: watchlover@gmail.com',
+  kakao: '예: watchlover_kim',
+  insta: '예: @watchlover_kim',
+  phone: '예: 010-1234-5678',
+};
+
+function updateContactInput(type) {
+  const input = document.getElementById('f-contact');
+  if (!type) { input.style.display = 'none'; input.value = ''; return; }
+  input.style.display = 'block';
+  input.placeholder = placeholders[type] || '';
+  input.type = type === 'email' ? 'email' : type === 'phone' ? 'tel' : 'text';
+  input.focus();
+}
+
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
@@ -524,12 +547,14 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 function submitForm() {
-  const name    = document.getElementById('f-name').value.trim();
-  const contact = document.getElementById('f-contact').value.trim();
-  const type    = document.getElementById('f-type').value;
-  if (!name)    { alert('이름 또는 닉네임을 입력해주세요.'); return; }
-  if (!contact) { alert('연락처를 입력해주세요.'); return; }
-  if (!type)    { alert('관심 유형을 선택해주세요.'); return; }
+  const name        = document.getElementById('f-name').value.trim();
+  const contactType = document.getElementById('f-contact-type').value;
+  const contact     = document.getElementById('f-contact').value.trim();
+  const type        = document.getElementById('f-type').value;
+  if (!name)        { alert('이름 또는 닉네임을 입력해주세요.'); return; }
+  if (!contactType) { alert('연락 수단을 선택해주세요.'); return; }
+  if (!contact)     { alert('연락처를 입력해주세요.'); return; }
+  if (!type)        { alert('관심 유형을 선택해주세요.'); return; }
   document.getElementById('form-body').style.display = 'none';
   document.getElementById('form-success').style.display = 'block';
   /*
