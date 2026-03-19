@@ -555,20 +555,19 @@ function submitForm() {
   if (!contactType) { alert('연락 수단을 선택해주세요.'); return; }
   if (!contact)     { alert('연락처를 입력해주세요.'); return; }
   if (!type)        { alert('관심 유형을 선택해주세요.'); return; }
+  const fd = new FormData();
+  fd.append('entry.2047739173', name);
+  fd.append('entry.136835988',  contactType);
+  fd.append('entry.1575673102', contact);
+  fd.append('entry.1110608579', document.getElementById('f-have').value);
+  fd.append('entry.899237491',  document.getElementById('f-want').value);
+  fd.append('entry.491459003',  type);
+  fd.append('entry.978191235',  document.getElementById('f-msg').value);
+  fetch('https://docs.google.com/forms/d/e/1FAIpQLSezbjO6wLUdAUzoT5yYp3GSqvArZdl5K-fkUIwzhLf39blGww/formResponse', {
+    method: 'POST', mode: 'no-cors', body: fd
+  }).catch(() => {});
   document.getElementById('form-body').style.display = 'none';
   document.getElementById('form-success').style.display = 'block';
-  /*
-  const fd = new FormData();
-  fd.append('entry.XXXXXXX', name);
-  fd.append('entry.XXXXXXX', contact);
-  fd.append('entry.XXXXXXX', document.getElementById('f-have').value);
-  fd.append('entry.XXXXXXX', document.getElementById('f-want').value);
-  fd.append('entry.XXXXXXX', type);
-  fd.append('entry.XXXXXXX', document.getElementById('f-msg').value);
-  fetch('https://docs.google.com/forms/d/e/XXXXXXX/formResponse', {
-    method: 'POST', mode: 'no-cors', body: fd
-  });
-  */
 }
 </script>
 </body>
