@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CRCL — 시계 교환 플랫폼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #f7f6f3;
+  --bg2: #ffffff;
+  --bg3: #f0efe9;
+  --border: rgba(0,0,0,0.07);
+  --border2: rgba(0,0,0,0.11);
+  --accent: #2563eb;
+  --accent2: #1d4ed8;
+  --accent-light: #eff4ff;
+  --text: #1a1917;
+  --text2: #6b6860;
+  --text3: #a8a69f;
+  --green: #16a34a;
+  --green-light: #f0fdf4;
+  --tag-bg: #eef2ff;
+  --tag-text: #3b5bdb;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 네비 ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(247,246,243,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text);
+}
+.nav-logo span { color: var(--accent); }
+.nav-cta {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  background: var(--accent-light);
+  padding: 7px 16px;
+  border-radius: 50px;
+  transition: background 0.2s;
+}
+.nav-cta:hover { background: #dde8ff; }
+
+/* ── 공통 레이아웃 ── */
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── 히어로 ── */
+.hero {
+  padding: 128px 0 72px;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 50px;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.1s;
+}
+.hero-tag-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(36px, 7vw, 58px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.25s;
+}
+.hero-title .highlight {
+  color: var(--accent);
+  position: relative;
+}
+
+.hero-sub {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text2);
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 36px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.4s;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.52s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+
+.hero-note {
+  font-size: 13px;
+  color: var(--text3);
+}
+
+/* 히어로 일러스트 카드들 */
+.hero-visual {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.65s;
+}
+.mini-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.mini-card-img {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--bg3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.mini-card-brand {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 2px;
+}
+.mini-card-model {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+.mini-card-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 50px;
+}
+.badge-blue { background: var(--tag-bg); color: var(--tag-text); }
+.badge-green { background: var(--green-light); color: var(--green); }
+
+.arrow-badge {
+  grid-column: span 3;
+  background: var(--accent-light);
+  border: 1px solid rgba(37,99,235,0.15);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+}
+.arrow-icon { font-size: 16px; }
+
+/* ── 구분선 ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* ── 섹션 공통 ── */
+.section { padding: 72px 0; }
+
+.section-chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 4px 12px;
+  border-radius: 50px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.section-sub {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+/* ── 페인포인트 ── */
+.pain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pain-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: box-shadow 0.2s;
+}
+.pain-item:hover { box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+.pain-icon {
+  width: 36px; height: 36px;
+  background: var(--bg3);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.pain-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.pain-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* ── 가치 카드 ── */
+.value-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.value-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.value-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); transform: translateY(-2px); }
+.value-card.full { grid-column: span 2; }
+.value-card-icon {
+  width: 40px; height: 40px;
+  background: var(--accent-light);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+.value-card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.value-card-desc { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+/* ── 플로우 ── */
+.flow-steps { display: flex; flex-direction: column; gap: 0; }
+.flow-step {
+  display: flex;
+  gap: 18px;
+  position: relative;
+}
+.flow-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 17px; top: 40px; bottom: 0;
+  width: 1px;
+  background: var(--border2);
+}
+.flow-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.flow-content { padding: 6px 0 32px; }
+.flow-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.flow-desc { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+/* ── 폼 섹션 ── */
+.form-section {
+  padding: 72px 0 96px;
+}
+.form-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 40px 36px;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.06);
+}
+.form-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.form-sub {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  display: block;
+  margin-bottom: 7px;
+}
+.form-group { margin-bottom: 14px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: var(--bg3);
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: var(--text);
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text3); }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent);
+  background: #fff;
+}
+.form-textarea { resize: none; height: 86px; line-height: 1.6; }
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a8a69f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.submit-btn {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s, transform 0.15s;
+}
+.submit-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+.form-privacy {
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.6;
+}
+
+/* 성공 */
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 16px 0;
+}
+.success-icon {
+  width: 56px; height: 56px;
+  background: var(--green-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  margin: 0 auto 18px;
+}
+.success-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.success-desc { font-size: 14px; color: var(--text2); line-height: 1.7; }
+
+/* ── 푸터 ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 24px;
+  text-align: center;
+}
+.footer-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.footer-copy { font-size: 11px; color: var(--text3); }
+
+/* ── 애니메이션 ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── 반응형 ── */
+@media (max-width: 520px) {
+  .hero-visual { grid-template-columns: 1fr 1fr; }
+  .mini-card:last-of-type { display: none; }
+  .value-grid { grid-template-columns: 1fr; }
+  .value-card.full { grid-column: span 1; }
+  .form-card { padding: 24px 18px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- 네비 -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">CRC<span>L</span></div>
+    <a href="#register" class="nav-cta">사전 등록 →</a>
+  </div>
+</nav>
+
+<!-- 히어로 -->
+<section class="wrap hero">
+  <div class="hero-tag">
+    <div class="hero-tag-dot"></div>
+    곧 출시됩니다 · crcl.kr
+  </div>
+  <h1 class="hero-title">
+    내 시계로<br>
+    <span class="highlight">드림워치</span>를<br>
+    손에 넣는 방법
+  </h1>
+  <p class="hero-sub">
+    현금 없이 시계를 교환하거나, 보유 시계를 정리해<br>
+    드림워치의 실탄을 마련하세요.<br>
+    매칭부터 정품 검수까지 CRCL이 책임집니다.
+  </p>
+  <div class="hero-actions">
+    <a href="#register" class="btn-primary">출시 알림 받기</a>
+    <span class="hero-note">무료 · 스팸 없음</span>
+  </div>
+
+  <!-- 미니 카드 일러스트 -->
+  <div class="hero-visual">
+    <div class="mini-card">
+      <div class="mini-card-badge badge-blue">내 시계</div>
+      <div class="mini-card-img">
+        <svg width="56" height="56" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="32" ry="32" fill="#e8eaf6" stroke="#c5cae9" stroke-width="1.5"/>
+          <ellipse cx="50" cy="50" rx="25" ry="25" fill="#f5f5ff" stroke="#9fa8da" stroke-width="1"/>
+          <circle cx="50" cy="50" r="2.5" fill="#3b5bdb"/>
+          <line x1="50" y1="30" x2="50" y2="50" stroke="#3b5bdb" stroke-width="2" stroke-linecap="round"/>
+          <line x1="50" y1="50" x2="64" y2="57" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="42" y="19" width="8" height="14" rx="3" fill="#dde" stroke="#bbc" stroke-width="0.7"/>
+          <rect x="42" y="67" width="8" height="14" rx="3" fill="#dde" stroke="#bbc" stroke-width="0.7"/>
+        </svg>
+      </div>
+      <div class="mini-card-brand">Rolex</div>
+      <div class="mini-card-model">Submariner</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-card-badge badge-green">받을 시계</div>
+      <div class="mini-card-img">
+        <svg width="56" height="56" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="32" ry="32" fill="#e6f4ea" stroke="#c8e6c9" stroke-width="1.5"/>
+          <ellipse cx="50" cy="50" rx="25" ry="25" fill="#f4fff6" stroke="#81c784" stroke-width="1"/>
+          <circle cx="50" cy="50" r="2.5" fill="#16a34a"/>
+          <line x1="50" y1="30" x2="50" y2="50" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+          <line x1="50" y1="50" x2="62" y2="55" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="42" y="19" width="8" height="14" rx="3" fill="#d4edda" stroke="#b2d8bb" stroke-width="0.7"/>
+          <rect x="42" y="67" width="8" height="14" rx="3" fill="#d4edda" stroke="#b2d8bb" stroke-width="0.7"/>
+        </svg>
+      </div>
+      <div class="mini-card-brand">Rolex</div>
+      <div class="mini-card-model">GMT-Master II</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-card-img">
+        <svg width="56" height="56" viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="28" ry="34" fill="#fef3e2" stroke="#fdd8a0" stroke-width="1.5"/>
+          <ellipse cx="50" cy="50" rx="22" ry="27" fill="#fffbf5" stroke="#f9bc60" stroke-width="1"/>
+          <circle cx="50" cy="50" r="2.5" fill="#b45309"/>
+          <line x1="50" y1="28" x2="50" y2="50" stroke="#b45309" stroke-width="2" stroke-linecap="round"/>
+          <line x1="50" y1="50" x2="63" y2="55" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="43" y="17" width="7" height="13" rx="3" fill="#fde8b8" stroke="#f9c67a" stroke-width="0.7"/>
+          <rect x="43" y="70" width="7" height="13" rx="3" fill="#fde8b8" stroke="#f9c67a" stroke-width="0.7"/>
+        </svg>
+      </div>
+      <div class="mini-card-brand">Patek Philippe</div>
+      <div class="mini-card-model">Calatrava</div>
+    </div>
+    <div class="arrow-badge">
+      <span class="arrow-icon">🔄</span>
+      CRCL이 자동으로 매칭하고, 정품 검수 후 교환해드려요
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 페인포인트 -->
+<section class="wrap section reveal">
+  <div class="section-chip">이런 경험 있으신가요</div>
+  <h2 class="section-title">시계 교환,<br>혼자 하기엔 너무 어렵죠</h2>
+  <p class="section-sub">시계 마니아라면 한 번쯤 겪어봤을 불편함들이에요.</p>
+  <div class="pain-list">
+    <div class="pain-item">
+      <div class="pain-icon">🔍</div>
+      <div>
+        <div class="pain-title">원하는 교환 상대 찾기가 너무 힘들어요</div>
+        <div class="pain-desc">내 시계를 원하면서, 내가 원하는 시계를 가진 사람을 카페·오픈채팅에서 혼자 찾기란 하늘의 별 따기예요.</div>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-icon">😟</div>
+      <div>
+        <div class="pain-title">가품이 무섭고, 사기도 걱정돼요</div>
+        <div class="pain-desc">수백만 원짜리 시계 교환인데 상대방을 믿는 수밖에 없는 현실. 검증할 방법이 없어요.</div>
+      </div>
+    </div>
+    <div class="pain-item">
+      <div class="pain-icon">⌚</div>
+      <div>
+        <div class="pain-title">여러 개를 정리해서 드림워치로 가고 싶어요</div>
+        <div class="pain-desc">안 차는 시계 두세 개를 정리해 드림워치 하나로 가고 싶은데, 이 과정을 한 곳에서 해결할 수가 없어요.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 가치 제안 -->
+<section class="wrap section reveal">
+  <div class="section-chip">CRCL이 하는 일</div>
+  <h2 class="section-title">교환을 다시 설계했어요</h2>
+  <p class="section-sub">시계 교환의 세 가지 문제를 한 번에 해결해요.</p>
+  <div class="value-grid">
+    <div class="value-card">
+      <div class="value-card-icon">🔄</div>
+      <div class="value-card-title">자동 교환 매칭</div>
+      <div class="value-card-desc">원하는 시계 우선순위만 입력하면 1:1 또는 다자간으로 자동 탐색해요.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-card-icon">🔍</div>
+      <div class="value-card-title">정품 검수 보장</div>
+      <div class="value-card-desc">CRCL이 물건을 직접 수령해 확인 후 발송해요. 가품 걱정 없어요.</div>
+    </div>
+    <div class="value-card full">
+      <div class="value-card-icon">🎯</div>
+      <div class="value-card-title">드림워치 여정</div>
+      <div class="value-card-desc">목표 시계를 설정하면 보유 시계를 팔 때마다 진행률을 보여줘요. 여러 개를 정리해 드림워치 하나로 가는 여정을 함께해요.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 작동 방식 -->
+<section class="wrap section reveal">
+  <div class="section-chip">이렇게 작동해요</div>
+  <h2 class="section-title">단 세 단계로</h2>
+  <p class="section-sub">복잡한 건 CRCL이 알아서 해요.</p>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-content">
+        <div class="flow-title">내 시계 등록 + 원하는 시계 입력</div>
+        <div class="flow-desc">브랜드·모델·상태·사진을 등록하고, 원하는 시계를 1~3순위로 설정해요. 드림워치가 있다면 목표로 설정하세요.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-content">
+        <div class="flow-title">CRCL이 매칭을 찾아드려요</div>
+        <div class="flow-desc">1:1이 안 되면 A→B→C→A 다자간 체인으로 자동 탐색해요. 매칭이 성사되면 알림이 와요.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-content">
+        <div class="flow-title">CRCL이 검수하고, 드림워치가 도착해요</div>
+        <div class="flow-desc">시계를 CRCL로 보내면 정품 확인 후 상대방에게 발송해요. 현금 없이, 사기 걱정 없이.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 폼 -->
+<section class="wrap form-section reveal" id="register">
+  <div class="form-card">
+    <div id="form-body">
+      <div class="form-title">출시 알림 받기 👋</div>
+      <p class="form-sub">
+        사전 등록하시면 베타 오픈 시 가장 먼저 초대장을 보내드려요.<br>
+        지금 교환하고 싶은 시계가 있다면 함께 적어주세요.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">이름 또는 닉네임</label>
+        <input class="form-input" id="f-name" type="text" placeholder="예: 김시계"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">연락처 (카카오 ID 또는 인스타 ID)</label>
+        <input class="form-input" id="f-contact" type="text" placeholder="예: @watchlover_kim"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">내놓고 싶은 시계</label>
+          <input class="form-input" id="f-have" type="text" placeholder="예: Rolex Submariner"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">원하는 시계</label>
+          <input class="form-input" id="f-want" type="text" placeholder="예: GMT-Master II"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">관심 서비스</label>
+        <select class="form-select" id="f-type">
+          <option value="">선택해주세요</option>
+          <option value="exchange">시계 교환 (현금 없이)</option>
+          <option value="upgrade">드림워치 실탄 확보 (판매 후 구매)</option>
+          <option value="both">둘 다 관심 있어요</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">하고 싶은 말 (선택)</label>
+        <textarea class="form-textarea" id="f-msg" placeholder="교환 거래에서 겪은 불편함이나 원하는 기능을 자유롭게 적어주세요."></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="submitForm()">사전 등록하기</button>
+      <p class="form-privacy">수집된 정보는 베타 초대 및 서비스 개선 목적으로만 사용되며 제3자에게 제공되지 않아요.</p>
+    </div>
+
+    <div class="form-success" id="form-success">
+      <div class="success-icon">✅</div>
+      <div class="success-title">등록 완료됐어요!</div>
+      <p class="success-desc">CRCL 베타 오픈 시 가장 먼저 연락드릴게요.<br>시계 교환 문화를 함께 만들어 주셔서 감사해요.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 푸터 -->
+<footer>
+  <div class="footer-logo">CRCL</div>
+  <div class="footer-copy">© 2026 CRCL · crcl.kr</div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+function submitForm() {
+  const name    = document.getElementById('f-name').value.trim();
+  const contact = document.getElementById('f-contact').value.trim();
+  const type    = document.getElementById('f-type').value;
+  if (!name)    { alert('이름 또는 닉네임을 입력해주세요.'); return; }
+  if (!contact) { alert('연락처를 입력해주세요.'); return; }
+  if (!type)    { alert('관심 서비스를 선택해주세요.'); return; }
+  document.getElementById('form-body').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+  /*
+  const formData = new FormData();
+  formData.append('entry.XXXXXXX', name);
+  formData.append('entry.XXXXXXX', contact);
+  fetch('https://docs.google.com/forms/d/e/XXXXXXX/formResponse', {
+    method: 'POST', mode: 'no-cors', body: formData
+  });
+  */
+}
+</script>
+</body>
+</html>
