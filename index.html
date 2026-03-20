@@ -555,18 +555,19 @@ function submitForm() {
   if (!contactType) { alert('연락 수단을 선택해주세요.'); return; }
   if (!contact)     { alert('연락처를 입력해주세요.'); return; }
   if (!type)        { alert('관심 유형을 선택해주세요.'); return; }
-  const fd = new FormData();
-  fd.append('name',        name);
-  fd.append('contactType', contactType);
-  fd.append('contact',     contact);
-  fd.append('have',        document.getElementById('f-have').value);
-  fd.append('want',        document.getElementById('f-want').value);
-  fd.append('type',        type);
-  fd.append('msg',         document.getElementById('f-msg').value);
-  fetch('https://script.google.com/macros/s/AKfycbw1q_tG0TTKwf62kvzRqZL2S5EtM7h2GypAo4wFza4H1Wjud5tUJQRfaYpHPkSBY8N05Q/exec', {
-    method: 'POST',
+  const base = 'https://script.google.com/macros/s/AKfycbw1q_tG0TTKwf62kvzRqZL2S5EtM7h2GypAo4wFza4H1Wjud5tUJQRfaYpHPkSBY8N05Q/exec';
+  const params = new URLSearchParams({
+    name:        name,
+    contactType: contactType,
+    contact:     contact,
+    have:        document.getElementById('f-have').value,
+    want:        document.getElementById('f-want').value,
+    type:        type,
+    msg:         document.getElementById('f-msg').value,
+  });
+  fetch(`${base}?${params.toString()}`, {
+    method: 'GET',
     mode: 'no-cors',
-    body: fd,
   }).catch(() => {});
   document.getElementById('form-body').style.display = 'none';
   document.getElementById('form-success').style.display = 'block';
